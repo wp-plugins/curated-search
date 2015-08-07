@@ -4,65 +4,32 @@
 
 ******/
 
-#add_exclude_list > tr:nth-child(2n) {
-    background-color: #eee;
-}
-.cs-excluded-wrap select{
-	min-width: 160px;
-}
-#cs_status {
-    min-height: 37px;
-}
-.cs-meta-txt {
-    font-size: 14px;
-    margin-left: 150px;
-    padding: 0px 50px 15px 12px;
-}
-.ptot {
-    min-height: 35px;
-    position: relative;
-    width: 100%;
-}
-#cs_pintotop {
-    position: absolute;
-    right: 0;
-    top: 8px;
-}
-ul#pinned-lists li span.handle {
-	font-size:35px;
-	cursor: move;
-	font-family:dashicons;
-	color:#666;
-}	
-.post_list_wrap ul#pinned-lists li span.remove {
-    cursor: pointer;
-    float: right;
-    font-size: 30px;
-}
-#pinned-lists li {
-    padding: 10px 15px 10px 10px;	
-    position:relative;
-}
-.pinned_add_posts .ui-tabs-anchor {
-    color: #45bbe6 !important;
-}
-.pinned_add_posts .ui-tabs-active a {
-    color: #666 !important;
-}
-.ui-tabs #tabs-post.ui-tabs-panel{padding: 1em 1.4em 0;}
-.cs_response {margin: 0 0 0 24px;min-height:100px}
-.pinned_add_posts #cs_tabs {
-    border-color: #e5e5e5;
-    border-radius: inherit;
-}
-.pinned_add_posts #cs_tabs ul.ui-tabs-nav {
-    background-color: #fafafa;
-    background-image: none;
-    border:1px solid #f2f2f2;
-}
-#cs_tabs ul.ui-tabs-nav .ui-state-default {
-	 background: none;
-}
-#cs_tabs ul.ui-tabs-nav .ui-state-default.ui-state-active {
-	background-color: #fff;
-}
+#add_exclude_list > tr:nth-child(2n) {  background-color: #eee; }
+
+.cs-excluded-wrap select { min-width: 160px; }
+
+#cs_status { min-height: 10px; }
+
+.cs-meta-txt { font-size: 14px; margin-left: 150px; padding: 0px 50px 15px 12px; }
+
+.ptot { min-height: 35px; position: relative; width: 100%; }
+
+#cs_pintotop { position: absolute; right: 0; top: 8px; }
+
+ul#pinned-lists li span.handle { font-size:35px; cursor: move; font-family:dashicons; color:#666; }
+
+.post_list_wrap ul#pinned-lists li span.remove { cursor: pointer; float: right; font-size: 24px; }
+
+.ui-tabs #tabs-post.ui-tabs-panel { padding: 1em 1.4em 0; }
+
+.cs_response { margin: 0 0 0 24px; min-height:100px }
+
+#cs_tabs ul.ui-tabs-nav .ui-state-default.ui-state-active { background-color: #fff; }
+
+.no-margin { margin-bottom: -10px; }
+
+.menu-item-handle, .widget .widget-top { padding: 15px; }
+
+.pinned_add_posts .ui-widget-header {  background: #f5f5f5 none repeat scroll 0 0;  border: 1px solid #ccc; }
+
+.pinned_add_posts  .ui-widget-content {  border: 1px solid #e5e5e5; }

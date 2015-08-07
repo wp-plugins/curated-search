@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Curated Search
  * Description: Quickly and easily specify the content you want users to see for specific search queries.
- * Version: 1.0
+ * Version: 1.1
  * Author: LaunchSite.us
  * Author URI: http://launchsite.us/curated-search
  */
@@ -23,7 +23,7 @@ final class Curated_Search {
 	/**
 	 * @var string
 	 */
-	public $version = '1.0';
+	public $version = '1.1';
 
 	/**
 	 * @var Curated Search The single instance of the class

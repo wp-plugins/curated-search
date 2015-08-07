@@ -22,7 +22,8 @@ function cs_add_post_columns($columns) {
 	
     $columns = array_merge($columns, array(	
 		'search_term' =>__( 'Search Term', 'curated_search'),
-		'synonyms' => __('Synonyms', 'curated_search')
+		'synonyms' => __('Synonyms', 'curated_search'),
+		'destination_url' => __('Destination URL', 'curated_search')
 	));
 	
 	if( $date_label ) {
@@ -46,6 +47,10 @@ function cs_show_columns($name) {
 		break;	
 		case 'search_term':
 			$views = esc_attr( get_post_meta($post->ID, 'cs_search_term', true) );
+			echo $views;
+		break;
+		case 'destination_url':
+			$views = esc_attr( get_post_meta($post->ID, 'cs_destination_url', true) );
 			echo $views;
 		break;	
 	}

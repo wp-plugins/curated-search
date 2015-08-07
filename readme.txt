@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: fattymembrane
 Donate link: http://launchsite.us/
-Tags: search, results, pin, redirect, curate
+Tags: search, results, pin, redirect, curate, better search, improve search
 Requires at least: 3.0.1
 Tested up to: 4.2.2
 Stable tag: 4.2.2
@@ -20,6 +20,8 @@ WordPress is great. WordPress’s search engine - not so much. Until now, there 
 2. You can spend a few hours playing with the endless settings of plugins that use fancy algorithms, but don’t seem to do much other than slow down your site.
 
 But most of the time, you know exactly what information your users should be seeing for common searches. Curated Search gives you the tools to send users to the best content using the perfect algorithm - you.
+
+https://www.youtube.com/watch?v=nO75kPExREw
 
 Specify a search term for which you would like to control the results, then use the following features to curate the content displayed to your visitors:
 
@@ -60,6 +62,11 @@ This plugin won't do anything automatically. It is for modifying search results 
 5. Search results for terms marked as Synonyms of the Special Search are the same as the primary search term.
 
 == Changelog ==
+
+= 1.1 =
+* Added "Destination URL" column to the Special Searches list
+* Revised Settings screen and added a "Support" tab with overview video and support links
+* Minor graphical tweaks to "Pinned Results" field
 
 = 1.0 =
 * Initial release

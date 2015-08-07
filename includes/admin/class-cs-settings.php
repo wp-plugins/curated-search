@@ -57,98 +57,123 @@ class Curated_Search_Settings {
 		$cs_one_result_redirect = get_option( "cs_one_result_redirect" );
 		
         ?>
+        
         <div class="wrap">
-            <h2><?php echo __('Curated Search Settings','curated_search'); ?></h2>    
-            <?php
-			if($message) {
-				echo '<div class="updated below-h2" id="message"><p>'.$message.'</p></div>';
+        	<?php
+        	$tabs = array('general' => __('General','curated_search'), 'support' => __('Support','curated_search') );
+        	if ( isset ( $_GET['tab'] ) ) $current = $_GET['tab'];
+   			else $current = 'general';
+			echo '<div id="icon-themes" class="icon32"><br></div>';
+			echo '<h2 class="nav-tab-wrapper">';
+			foreach( $tabs as $tab => $name ){
+				$class = ( $tab == $current ) ? ' nav-tab-active' : '';
+				echo "<a class='nav-tab$class' href='?post_type=special-search&page=curated-search&tab=$tab'>$name</a>";
+
 			}
-			?>  
-			<h3><?php echo __('General','curated_search'); ?></h3>      
-            <form method="post" action="edit.php?post_type=special-search&page=curated-search">
-            	<input type="hidden" name="cs_setting_for" value="curated-search" />
-            	<table class="form-table">
-					<tbody>
-						<tr>
-							<th scope="row"><label for="blogname"><?php _e('Maximum results:' , 'curated_search'); ?></label></th>
-							<td><input type="number" class="regular-text" id="cs_search_pagination" value="<?php echo $cs_search_pagination; ?>" name="cs_search_pagination" placeholder="10" min="1">
-							<p class="description"><?php _e('Enter the maximum number of search results you wish to display. Leave blank for unlimited.' , 'curated_search'); ?></p></td>
-						</tr>
-						<tr>
-							<th scope="row"><label for="blogdescription"><?php _e('Redirect when one result:' , 'curated_search'); ?></label></th>
-							<td><input type="checkbox" value="1" <?php echo ($cs_one_result_redirect==1)? 'checked':''; ?> name="cs_one_result_redirect"/>
-							<p class="description"><?php _e('If only one result is present, the user will be redirected to the post/page and bypass the search page entirely.' , 'curated_search'); ?></p></td>
-						</tr>
-						<tr><td colspan=2><?php _e('Place the code below the title in search.php of your current theme file', 'curated_search'); ?>: <code onclick="this.select();">&lt;?php do_action('cs_search_after_title'); ?&gt;</code></td></tr>
-					</tbody>
-				</table>
-				<div id="cs_status" class="below-h2"></div>
-		        <h3><?php _e('Exclude Content', 'curated_search'); ?></h3> 		        
-		        <div class="cs-excluded-wrap">
-		        	<div class="tablenav top cs-select-wrap">
-		        		<?php 
-		        		$args = array(
-								   'public'   => true							  
-								);
+			echo '</h2>'; 
+			switch ( $current ){
+				case 'general' :
+					if($message) {
+						echo '<div class="updated below-h2" id="message"><p>'.$message.'</p></div>';
+					}
+					?>  
+					<h3 class="no-margin"><?php _e('Single Result','curated_search'); ?></h3>      
+					<p>
+						<?php _e('If a search term returns only one result, Curated search can redirect the user to the URL of the result and bypass the search results page entirely', 'curated_search'); ?>
+					</p>
+				    <form method="post" action="edit.php?post_type=special-search&page=curated-search">
+				    	<input type="hidden" name="cs_setting_for" value="curated-search" />
+				    	<label for="cs_one_result_redirect">
+							<input type="checkbox" value="1" <?php echo ($cs_one_result_redirect==1)? 'checked':''; ?> name="cs_one_result_redirect"/>
+							<?php _e('Redirect when only one result', 'curated_search'); ?>
+						</label>
+						<br><br>
+						<h3 class="no-margin"><?php _e('Maximum Number of Results', 'curated_search'); ?></h3>
+						<p>
+							<?php _e('By default, Wordpress will return all search results that match the given search term. Depending on the term and how many pieces of content are on the site, this could mean dozens of results over several pages. Since users are unlikely to visit more than one or two pages of results, you can limit the total number of results returned to a more manageable number. Leaving this field blank will keep the default settings and return all results for a given term.', 'curated_search'); ?>
+						</p>
+						<input type="number" class="regular-text" id="cs_search_pagination" value="<?php echo $cs_search_pagination; ?>" name="cs_search_pagination" placeholder="10" min="1">
 						
-						$post_types = get_post_types( $args, 'object'); 
-						unset($post_types['attachment']);
-						unset($post_types['special-search']);		        		
-		        		?>
-			    		<select id="cs_selected_post_type" name="cs_post_type">
-			    			<?php
-			    			foreach($post_types as $key => $post_type) { ?>
-			    				<option value="<?php echo $key; ?>"><?php echo $post_type->label; ?></option>	  
-			    			<?php } ?>     			
-			    		</select>
-				    	
-		        		<select id="cs_loaded_post_type" name="cs_loaded_post_type">
-		        			<option value=""><?php _e('Select', 'curated_search'); ?></option>     			
-		        		</select>
-		        		
-		        		<select id="cs_load_terms" name="cs_load_terms">
-		        			<option value=""><?php _e('Select', 'curated_search'); ?></option>     			
-		        		</select>
-		        		<a href="javascript:;" id="cs_add_to_exclude_list" class="button"><?php _e('Add', 'curated_search'); ?></a>
-		        	</div>
-		        	<table class="widefat">
-						<thead>
-							<tr>
-								<th class="column-cb"><?php _e('Excluded', 'curated_search'); ?></th>
-								<th class="column-cb"><?php _e('Action', 'curated_search'); ?></th>
-							</tr>
-						</thead>
-						<tfoot>
-							<tr>
-								<th class="column-cb"><?php _e('Excluded', 'curated_search'); ?></th>
-								<th class="column-cb"><?php _e('Action', 'curated_search'); ?></th>
-							</tr>
-						</tfoot>
-						<tbody id="add_exclude_list">
-							<?php 
-							global $wpdb;
-							$table_name = $wpdb->prefix . "cs_excluded_list"; 
-							$exclude_lists = $wpdb->get_results("SELECT * FROM `$table_name` ORDER BY id DESC");
-							if(!empty($exclude_lists)) {
-								foreach($exclude_lists as $exclude_list) { 
-									$single_term = get_term_by('id', $exclude_list->term_id, $exclude_list->taxonomy_type);
-									if(!empty($single_term)) {
-										$p_type = get_taxonomy($single_term->taxonomy)->object_type[0];		
-										?>
-										<tr>
-											<td class="column-cb"><?php echo $single_term->name.' ( '.$p_type.' | '.$single_term->taxonomy.' ) '; ?></td>
-											<td class="column-cb"><a href="javascript:;" style="color:red;" onClick="cs_remove_exclude_list(this, '<?php echo $exclude_list->taxonomy_type.'||'.$exclude_list->term_id; ?>');"><?php _e('Remove', 'curated_search'); ?></a></td>
-										</tr>
-										<?php 
-									} 
-								}
+				    	<div id="cs_status" class="below-h2"></div>
+						<h3><?php _e('Exclude Content', 'curated_search'); ?></h3> 		        
+						<div class="cs-excluded-wrap">
+							<div class="tablenav top cs-select-wrap">
+								<?php 
+								$args = array(
+										   'public'   => true							  
+										);
+						
+								$post_types = get_post_types( $args, 'object'); 
+								unset($post_types['attachment']);
+								unset($post_types['special-search']);		        		
+								?>
+								<select id="cs_selected_post_type" name="cs_post_type">
+									<?php
+									foreach($post_types as $key => $post_type) { ?>
+										<option value="<?php echo $key; ?>"><?php echo $post_type->label; ?></option>	  
+									<?php } ?>     			
+								</select>
 							
-							} ?>
-						</tbody>
-					</table>
-		        <div>	
-		        <?php submit_button(); ?>
-            </form>
+								<select id="cs_loaded_post_type" name="cs_loaded_post_type">
+									<option value=""><?php _e('Select', 'curated_search'); ?></option>     			
+								</select>
+								
+								<select id="cs_load_terms" name="cs_load_terms">
+									<option value=""><?php _e('Select', 'curated_search'); ?></option>     			
+								</select>
+								<a href="javascript:;" id="cs_add_to_exclude_list" class="button"><?php _e('Add', 'curated_search'); ?></a>
+							</div>
+							<table class="widefat">
+								<thead>
+									<tr>
+										<th class="column-cb"><?php _e('Excluded', 'curated_search'); ?></th>
+										<th class="column-cb"><?php _e('Action', 'curated_search'); ?></th>
+									</tr>
+								</thead>
+								<tfoot>
+									<tr>
+										<th class="column-cb"><?php _e('Excluded', 'curated_search'); ?></th>
+										<th class="column-cb"><?php _e('Action', 'curated_search'); ?></th>
+									</tr>
+								</tfoot>
+								<tbody id="add_exclude_list">
+									<?php 
+									global $wpdb;
+									$table_name = $wpdb->prefix . "cs_excluded_list"; 
+									$exclude_lists = $wpdb->get_results("SELECT * FROM `$table_name` ORDER BY id DESC");
+									if(!empty($exclude_lists)) {
+										foreach($exclude_lists as $exclude_list) { 
+											$single_term = get_term_by('id', $exclude_list->term_id, $exclude_list->taxonomy_type);
+											if(!empty($single_term)) {
+												$p_type = get_taxonomy($single_term->taxonomy)->object_type[0];		
+												?>
+												<tr>
+													<td class="column-cb"><?php echo $single_term->name.' ( '.$p_type.' | '.$single_term->taxonomy.' ) '; ?></td>
+													<td class="column-cb"><a href="javascript:;" style="color:red;" onClick="cs_remove_exclude_list(this, '<?php echo $exclude_list->taxonomy_type.'||'.$exclude_list->term_id; ?>');"><?php _e('Remove', 'curated_search'); ?></a></td>
+												</tr>
+												<?php 
+											} 
+										}
+							
+									} ?>
+								</tbody>
+							</table>
+						<div>	
+						<?php submit_button(); ?>
+				    </form>
+				  	<?php
+				break;
+      			case 'support' : ?>
+      				<h3 class="no-margin"><?php _e('Overview Video','curated_search'); ?></h3>
+      				<p><?php _e('A brief walkthrough on configuring the plugin for your site.','curated_search'); ?></p>
+      				<p><iframe width="560" height="315" src="https://www.youtube.com/embed/nO75kPExREw" frameborder="0" allowfullscreen></iframe></p>
+      				<h3 class="no-margin"><?php _e('Support Forum','curated_search'); ?></h3>
+      				<p><a href="https://wordpress.org/plugins/curated-search/" target="_blank">https://wordpress.org/plugins/curated-search/</a></p>
+      				<h3 class="no-margin"><?php _e('Official Site','curated_search'); ?></h3>
+      				<p><a href="http://launchsite.us/curated-search/" target="_blank">http://launchsite.us/curated-search/</a></p>
+      				<?php
+      			break;      			
+				} ?>
         </div>
         <?php
     }

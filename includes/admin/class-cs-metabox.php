@@ -116,7 +116,7 @@ class Curated_Search_Metabox {
 			<ul id="pinned-lists">
 				<?php
 				$cs_pinned_post_ids = get_post_meta($post->ID, 'cs_pinned_post_ids', true);
-				if(!empty($cs_pinned_post_ids)) {
+				if(!empty($cs_pinned_post_ids) && is_array($cs_pinned_post_ids)) {
 					foreach($cs_pinned_post_ids as $p_ids) {
 						echo '<li class="menu-item-handle ui-sortable-handle" id="item-'.$p_ids.'">'.get_the_title( $p_ids ).'<span class="remove handle dashicons-dismiss" onclick="cs_remove_pinned(\''.$p_ids.'\')"></span></li>';
 					} 
