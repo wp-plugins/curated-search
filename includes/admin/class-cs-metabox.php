@@ -40,7 +40,7 @@ class Curated_Search_Metabox {
 
 		$args = array(
 			'labels'             => $labels,
-			'public'             => true,
+			'public'             => false,
 			'publicly_queryable' => true,
 			'show_ui'            => true,
 			'show_in_menu'       => true,
@@ -116,7 +116,7 @@ class Curated_Search_Metabox {
 			<ul id="pinned-lists">
 				<?php
 				$cs_pinned_post_ids = get_post_meta($post->ID, 'cs_pinned_post_ids', true);
-				if(!empty($cs_pinned_post_ids)) {
+				if(!empty($cs_pinned_post_ids) && is_array($cs_pinned_post_ids)) {
 					foreach($cs_pinned_post_ids as $p_ids) {
 						echo '<li class="menu-item-handle ui-sortable-handle" id="item-'.$p_ids.'">'.get_the_title( $p_ids ).'<span class="remove handle dashicons-dismiss" onclick="cs_remove_pinned(\''.$p_ids.'\')"></span></li>';
 					} 
@@ -137,7 +137,7 @@ class Curated_Search_Metabox {
 					<?php echo $tab_html; ?>
 					<div class="cs_response"></div>
 				</div>
-				<div class="ptot"><input type="button" name="cs_pintotop" class="button" id="cs_pintotop" value="Pin to top" /></div>
+				<div class="ptot"><input type="button" name="cs_pintotop" class="button" id="cs_pintotop" value="<?php _e('Pin to top', 'curated_search'); ?>" /></div>
 			</div>
 		</div>
 		<?php

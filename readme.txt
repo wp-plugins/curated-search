@@ -1,25 +1,25 @@
 === Plugin Name ===
 Contributors: fattymembrane
 Donate link: http://launchsite.us/
-Tags: search, results, pin, redirect, curate
+Tags: search, results, pin, redirect, curate, better search, improve search, relevant, relevance, search results, terms,
 Requires at least: 3.0.1
-Tested up to: 4.2.2
-Stable tag: 4.2.2
+Tested up to: 4.3
+Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Quickly and easily specify the content you want users to see for specific search queries.
+Specify the content you want users to see for specific search queries by pinning results, intercepting similar search terms, and redirecting based on keyword.
 
 == Description ==
 
-You know what information users should be seeing for the most common searches on your site, but the WordPress search engine usually has other ideas.
+You know what information users should be seeing for the most common searches on your site, but the WordPress search engine usually has other ideas. Until now, there have been two options:
 
-WordPress is great. WordPress’s search engine - not so much. Until now, there have been two options:
-
-1. You can use Google search results, which makes the user feel like he’s been escorted out of the building by burly security guards.
-2. You can spend a few hours playing with the endless settings of plugins that use fancy algorithms, but don’t seem to do much other than slow down your site.
+1. Use Google search results, making the user feel like he’s been escorted out of the building by burly security guards.
+2. Spend a few hours playing with the endless settings of search plugins that use fancy algorithms, but don’t seem to do much other than slow down your site.
 
 But most of the time, you know exactly what information your users should be seeing for common searches. Curated Search gives you the tools to send users to the best content using the perfect algorithm - you.
+
+https://www.youtube.com/watch?v=nO75kPExREw
 
 Specify a search term for which you would like to control the results, then use the following features to curate the content displayed to your visitors:
 
@@ -60,6 +60,16 @@ This plugin won't do anything automatically. It is for modifying search results 
 5. Search results for terms marked as Synonyms of the Special Search are the same as the primary search term.
 
 == Changelog ==
+
+= 1.2 =
+* NEW: Import and export special searches for backup or use on other sites.
+* FIX: Plugin used a function called CS() which caused errors with some other plugins, notably Theme.co's Cornerstone and X theme. The function has been renamed to remedy these issues.
+* FIX: Contextual content code was accidentally removed from the settings page in 1.1 and has been restored.
+
+= 1.1 =
+* Added "Destination URL" column to the Special Searches list
+* Revised Settings screen and added a "Support" tab with overview video and support links
+* Minor graphical tweaks to "Pinned Results" field
 
 = 1.0 =
 * Initial release

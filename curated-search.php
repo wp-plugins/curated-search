@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Curated Search
  * Description: Quickly and easily specify the content you want users to see for specific search queries.
- * Version: 1.0
+ * Version: 1.2
  * Author: LaunchSite.us
  * Author URI: http://launchsite.us/curated-search
  */
@@ -23,7 +23,7 @@ final class Curated_Search {
 	/**
 	 * @var string
 	 */
-	public $version = '1.0';
+	public $version = '1.2';
 
 	/**
 	 * @var Curated Search The single instance of the class
@@ -35,7 +35,7 @@ final class Curated_Search {
 	 *
 	 * Ensures only one instance of Curated Search is loaded or can be loaded.
 	 *
-	 * @see CS()
+	 * @see curated_search()
 	 * @return Curated Search - Main instance
 	 */
 	public static function instance() {
@@ -65,7 +65,7 @@ final class Curated_Search {
 
 
 	/**
-	 * Define CS Constants
+	 * Define Curated Search Constants
 	 */
 	private function define_constants() {
 		define( 'CS_PLUGIN_FILE', __FILE__ );
@@ -150,13 +150,14 @@ final class Curated_Search {
 endif;
 
 /**
- * Returns the main instance of CS to prevent the need to use globals.
+ * Returns the main instance of curated search to prevent the need to use globals.
  *
- * @since  2.1
+ * @since  1.2
  * @return Curated Search
  */
-function CS() {
+
+function curated_search() {
 	return Curated_Search::instance();
 }
 
-CS();
+curated_search();
