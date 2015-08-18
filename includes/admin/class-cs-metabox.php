@@ -40,7 +40,7 @@ class Curated_Search_Metabox {
 
 		$args = array(
 			'labels'             => $labels,
-			'public'             => true,
+			'public'             => false,
 			'publicly_queryable' => true,
 			'show_ui'            => true,
 			'show_in_menu'       => true,
@@ -137,7 +137,7 @@ class Curated_Search_Metabox {
 					<?php echo $tab_html; ?>
 					<div class="cs_response"></div>
 				</div>
-				<div class="ptot"><input type="button" name="cs_pintotop" class="button" id="cs_pintotop" value="Pin to top" /></div>
+				<div class="ptot"><input type="button" name="cs_pintotop" class="button" id="cs_pintotop" value="<?php _e('Pin to top', 'curated_search'); ?>" /></div>
 			</div>
 		</div>
 		<?php

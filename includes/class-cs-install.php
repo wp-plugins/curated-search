@@ -29,8 +29,7 @@ if ( ! class_exists( 'CS_Install' ) ) :
 		public function install() {
 			global $wpdb;
 			update_option( "cs_search_pagination", "10" );
-			update_option( "cs_one_result_redirect", 1 );
-			update_option( "cs_search_term_post_types", 'post, page' );
+			update_option( "cs_one_result_redirect", 1 );			
 			$table_name = $wpdb->prefix . "cs_excluded_list"; 
 			$sql = "CREATE TABLE IF NOT EXISTS `$table_name` (
 			  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,

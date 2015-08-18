@@ -33,3 +33,6 @@ ul#pinned-lists li span.handle { font-size:35px; cursor: move; font-family:dashi
 .pinned_add_posts .ui-widget-header {  background: #f5f5f5 none repeat scroll 0 0;  border: 1px solid #ccc; }
 
 .pinned_add_posts  .ui-widget-content {  border: 1px solid #e5e5e5; }
+
+.block-bgcolr { background: none repeat scroll 0 0 #fff; border: 1px solid #eee; box-sizing: border-box; margin-bottom: 10px; padding: 10px 15px; }
+

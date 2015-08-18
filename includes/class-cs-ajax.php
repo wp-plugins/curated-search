@@ -12,12 +12,12 @@ if ( ! class_exists( 'Curated_Search_Ajax' ) ) :
 			$ajax_events = array(
 				'cs-get-taxonomies'			=>	true,
 				'cs-get-terms'				=>	true,
-				'cs_add_to_exclude_list'		=>	true,
-				'cs_remove_exclude_list'		=>	true,
-				'cs_pinned_sort_order'			=>	true,
+				'cs_add_to_exclude_list'	=>	true,
+				'cs_remove_exclude_list'	=>	true,
+				'cs_pinned_sort_order'		=>	true,
 				'cs_autocomplete'			=>	true,
 				'cs_pintotop'				=>	true,
-				'cs_remove_pinned'  			=>	true,
+				'cs_remove_pinned'  		=>	true,
 			);
 		
 			foreach( $ajax_events as $ajax_event => $nopriv ) {			

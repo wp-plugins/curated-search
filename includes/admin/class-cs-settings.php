@@ -15,6 +15,7 @@ class Curated_Search_Settings {
      */
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
+        add_action( 'init', array( $this, 'export_import_settings' ) );
     }
 
     /**
@@ -36,6 +37,7 @@ class Curated_Search_Settings {
      * Options page callback
      */
     public function settings_callback() {
+    	
         $message = '';
 		if(!empty($_POST)) {
 			if(isset($_POST['cs_setting_for']) && $_POST['cs_setting_for'] == 'curated-search') {
@@ -49,8 +51,9 @@ class Curated_Search_Settings {
 				}
 				update_option( "cs_one_result_redirect", $cs_one_result_redirect );
 		
-				$message = 'Updated successfully.';
+				$message = __('Updated successfully.', 'curated_search');
 			}
+			
 		}
 	
         $cs_search_pagination = get_option( "cs_search_pagination" );
@@ -158,15 +161,59 @@ class Curated_Search_Settings {
 									} ?>
 								</tbody>
 							</table>
-						<div>	
+						</div>	
 						<?php submit_button(); ?>
 				    </form>
+				    <hr><br>
+				    <div class="imp_exp_wrap">
+				    	
+				    	<div class="block-bgcolr">
+				    		<h3 class="no-margin"><?php _e('Export/Import Special Searches', 'curated_search'); ?></h3>
+							<form action="<?php echo admin_url( 'export.php'); ?>">
+								<input type="hidden" value="true" name="download">
+								<input type="hidden" value="special-search" name="content">
+								<?php submit_button( __('Export Special Searches', 'curated_search') ); ?>
+							</form>	
+							
+							<?php 
+							$wp_importer_dir = 'wordpress-importer';
+							$plugin_file = $wp_importer_dir.'/'.$wp_importer_dir.'.php';				    	
+							if( !is_file(WP_PLUGIN_DIR.'/'.$plugin_file) ) {
+								add_thickbox(); 
+								$link = esc_url( network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $wp_importer_dir . '&from=import&TB_iframe=true&width=600&height=550' ) );
+								echo '<a href="'.$link.'" class="thickbox">'.__('Install Wordpress Importer Plugin', 'curated_search').'</a>';
+							} elseif ( !is_plugin_active( $plugin_file ) ) {
+								$link = esc_url(wp_nonce_url(admin_url('plugins.php?action=activate&plugin=' . $plugin_file . '&from=import'), 'activate-plugin_' . $plugin_file));
+								echo '<a href="'.$link.'">'.__('Active Wordpress Importer Plugin', 'curated_search').'</a>';
+							} else {
+								$link = esc_url(admin_url('admin.php?import=wordpress'));
+								echo '<a href="'.$link.'">'.__('Import Special Searches', 'curated_search').'</a>';
+							}
+							?>
+				    	</div>
+				    	<?php /*
+				    	<div class="block-bgcolr">	
+				    		<h3 class="no-margin"><?php _e('Export/Import Settings', 'curated_search'); ?></h3>			    	
+							<form method="post" action="edit.php?post_type=special-search&page=curated-search">
+								<input type="hidden" value="true" name="cs_download_settings">
+								<?php submit_button( __('Export Settings','curated_search') ); ?>
+							</form>	
+							<form method="post" enctype="multipart/form-data" action="edit.php?post_type=special-search&page=curated-search">
+								<input type="hidden" value="true" name="cs_upload_settings">
+								<input type="file" name="cs_settings_file">
+								<?php submit_button( __('Import','curated_search'), 'primary', 'submit', false ); ?>
+							</form>	
+				    	</div>
+				    	*/ ?>    	
+				    </div>
 				  	<?php
 				break;
       			case 'support' : ?>
       				<h3 class="no-margin"><?php _e('Overview Video','curated_search'); ?></h3>
       				<p><?php _e('A brief walkthrough on configuring the plugin for your site.','curated_search'); ?></p>
       				<p><iframe width="560" height="315" src="https://www.youtube.com/embed/nO75kPExREw" frameborder="0" allowfullscreen></iframe></p>
+      				<h3 class="no-margin"><?php _e('Contextual Content','curated_search'); ?></h3>
+      				<p><?php _e('Place the code below the header and above the loop in search.php of you current theme file:','curated_search'); ?> <code>&lt;?php do_action('cs_search_after_title'); ?&gt;</code></p>
       				<h3 class="no-margin"><?php _e('Support Forum','curated_search'); ?></h3>
       				<p><a href="https://wordpress.org/plugins/curated-search/" target="_blank">https://wordpress.org/plugins/curated-search/</a></p>
       				<h3 class="no-margin"><?php _e('Official Site','curated_search'); ?></h3>
@@ -177,6 +224,152 @@ class Curated_Search_Settings {
         </div>
         <?php
     }
+    
+    /**
+     * Export/Import Settings 
+     * TODO: For the future use
+     */
+    public function export_import_settings() {
+    	// Download xml settings starts
+		if(isset($_POST['cs_download_settings']) && $_POST['cs_download_settings'] == true) {
+			// Get cs_search_pagination
+			$cs_search_pagination = get_option( "cs_search_pagination" ); 
+			// Get cs_one_result_redirect
+			$cs_one_result_redirect = get_option( "cs_one_result_redirect" );
+			global $wpdb;
+			$table_name = $wpdb->prefix . "cs_excluded_list"; // Declare the table name
+			$excluded_results = $wpdb->get_results("SELECT * FROM `$table_name`");
+
+			$xml = new SimpleXMLElement('<xml/>');
+			$cs_settings = $xml->addChild('cs_settings');
+			
+			// XML for Terms
+			$cs_terms = $cs_settings->addChild('ex_terms');		
+			if(!empty($excluded_results)) {
+				foreach($excluded_results as $key => $result) {
+					$term = get_term_by('id', $result->term_id, $result->taxonomy_type);
+					if(!empty($term)) {	
+						$cs_term = $cs_terms->addChild('term');			
+						$cs_term->addChild('slug', $term->slug);
+						$cs_term->addChild('taxonomy_type', $result->taxonomy_type);
+						$cs_term->addChild('post_type', $result->post_type);
+					}
+				}
+			}
+			
+			// XML for options
+			$cs_options = $cs_settings->addChild('options');
+			if( !empty($cs_one_result_redirect) || !empty($cs_search_pagination) ) {
+				 if( !empty($cs_search_pagination) ) {
+				 	$cs_option = $cs_options->addChild('option');
+				 	$cs_option->addChild('key', 'cs_search_pagination');
+				 	$cs_option->addChild('value', $cs_search_pagination);
+				 }
+				 if( !empty($cs_one_result_redirect) ) {
+				 	$cs_option = $cs_options->addChild('option'); 
+				 	$cs_option->addChild('key', 'cs_one_result_redirect');
+				 	$cs_option->addChild('value', $cs_one_result_redirect);
+				 }
+			}
+			
+			// Force XML download code
+			$name = strftime('cs_settings_%m_%d_%Y.xml');
+			header('Content-Disposition: attachment;filename=' . $name);
+			header('Content-Type: text/xml');
+			header("Pragma: no-cache");
+			header("Expires: 0");
+			echo $xml->saveXML();
+			exit;			
+			// Download xml settings ends
+			
+		} 
+		// Upload xml settings starts
+		else if(isset($_POST['cs_upload_settings']) && $_POST['cs_upload_settings'] == true) { 
+			if (isset($_FILES['cs_settings_file']) && ($_FILES['cs_settings_file']['error'] == UPLOAD_ERR_OK) && ($_FILES["cs_settings_file"]["type"] == "text/xml")) {
+				$xml = simplexml_load_file($_FILES['cs_settings_file']['tmp_name']); 
+				
+				if( !empty($xml->cs_settings->ex_terms) ) {
+					global $wpdb, $not_exsting_terms;
+					$not_exsting_terms = array();
+					$table_name = $wpdb->prefix . "cs_excluded_list";  // Declare the table name
+					foreach($xml->cs_settings->ex_terms->term as $term) {
+						$new_term = get_term_by('slug', (string)$term->slug, (string)$term->taxonomy_type);
+						if(!empty($new_term)) {
+							// Query for check the value exists or not
+							$already_exists = $wpdb->get_row("SELECT * FROM `$table_name` WHERE `term_id` = '".(string)$new_term->term_id."' AND `taxonomy_type`='".(string)$term->taxonomy_type."' AND `post_type`='".(string)$term->post_type."'");
+							// Already Exists Checks
+							if(empty($already_exists)) { 
+								$data = array(
+									'term_id' 		=>	(string)$new_term->term_id,
+									'taxonomy_type' =>	(string)$term->taxonomy_type,
+									'post_type' 	=>	(string)$term->post_type
+								);
+								// Inserted the terms values to db
+								$wpdb->insert( $table_name, $data );
+							}
+						} else {
+							$not_exsting_terms[] = $term->slug;
+						}
+					}
+				}
+				
+				if( !empty($xml->cs_settings->options) ) {
+					foreach($xml->cs_settings->options->option as $option) {
+						// Update the option values
+						update_option( (string)$option->key, (string)$option->value );
+					}
+				}
+				
+				if(!empty($not_exsting_terms)) {
+					// Action hook for show success message
+					add_action( 'admin_notices', array( $this, 'cs_terms_not_existing_notice' ));
+				} else {
+					// Action hook for show success message
+					add_action( 'admin_notices', array( $this, 'cs_upload_notice' ) ); 
+				} 
+				
+			} else {
+				// Action hook for show error message
+				add_action( 'admin_notices', array( $this, 'cs_upload_file_error' ) ); 
+			}
+		}
+		// Upload xml settings ends
+		
+    }
+    
+    /**
+     * Success notice 
+     */
+    function cs_upload_notice() {
+    	?>
+		<div class="updated">
+		    <p><?php _e( 'Updated Successfully!', 'curated_search' ); ?></p>
+		</div>
+		<?php
+	}
+	
+	/**
+     * Terms not existing notice
+     */
+    function cs_terms_not_existing_notice($not_exsting_terms) {
+    	global $not_exsting_terms;
+    	?>
+		<div class="error">
+		    <p><?php printf( __( '<b>%s</b> does not exist.', 'curated_search' ), implode(", ",$not_exsting_terms) ); ?></p>
+		</div>
+		<?php
+	}
+	
+	/**
+     * File type error notice 
+     */
+	function cs_upload_file_error() {
+    	?>
+		<div class="error">
+		    <p><?php _e( 'Please select a xml file!', 'curated_search' ); ?></p>
+		</div>
+		<?php
+	}
 
 }
 endif;
